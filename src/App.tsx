@@ -30,7 +30,7 @@ const Settings: FC<{
   setParameters: (p: SimulationParameters) => void;
 }> = ({ parameters, setParameters }) => {
   return (
-    <section>      
+    <section>
       <div>
         <label>Infection Chance:</label>
         <input
@@ -135,7 +135,10 @@ const App: FC = () => {
         onChange={onPopInput}
       />
       <button onClick={resetPopulation}>Reset Population</button>
-      <Settings parameters={simulationParameters} setParameters={setSimulationParameters} />
+      <Settings
+        parameters={simulationParameters}
+        setParameters={setSimulationParameters}
+      />
       <section className="side-by-side">
         <div className="chartContainer">
           <LineChart data={diseaseData} width={400} height={400}>
