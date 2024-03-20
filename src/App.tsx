@@ -8,12 +8,26 @@ import { createPopulation, updatePopulation } from "./diseaseModel";
 import { LineChart, Line, YAxis, XAxis } from "recharts";
 
 const Patient: FC<{ patient: Patient }> = ({ patient }) => {
+  const getEmoji = () => {
+    if (patient.alive) {
+      if (patient.infected) {
+        return "🤢";
+      } else if (patient.immuneRemain == 0) {
+        return "😀";
+      } else {
+        return "😷";
+      }
+    } else {
+      return "☠️";
+    }
+  };
+
   return (
     <div
       className="patient"
       style={{ left: `${patient.x}%`, top: `${patient.y}%` }}
     >
-      {patient.infected ? "🤢" : "😀"}
+      {getEmoji()}
     </div>
   );
 };
@@ -124,7 +138,9 @@ const App: FC = () => {
       <h1>My Systems Model</h1>
       Population: {population.length}. Infected:{" "}
       {population.filter((p) => p.infected).length}
-      <button onClick={runTurn}>Next turn...</button>
+      <button onClick={runTurn} disabled={autoMode}>
+        Next turn...
+      </button>
       <button onClick={autoRun}>AutoRun</button>
       <button onClick={stop}>Stop</button>
       <input

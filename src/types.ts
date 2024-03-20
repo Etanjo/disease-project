@@ -5,6 +5,8 @@ export type Patient = {
   infected: boolean;
   daysInfected: number;
   vaccinated: boolean;
+  immuneRemain: number;
+  alive: boolean;
 };
 
 export type SimulationParameters = {  
@@ -13,8 +15,6 @@ export type SimulationParameters = {
 };
 
 export const defaultSimulationParameters: SimulationParameters = {
-  distanceThreshold: 5,
-  movement: 5,
   infectionChance: 5,
   deathChance: 0,
 };
