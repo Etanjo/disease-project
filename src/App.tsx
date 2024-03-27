@@ -37,6 +37,8 @@ type DataPoint = {
   newInfections: number;
   total: number;
   round: number;
+  dead: number;
+  newDeaths: number;
 };
 
 const Settings: FC<{
@@ -82,9 +84,9 @@ const App: FC = () => {
   const [population, setPopulation] = useState<Patient[]>(
     createPopulation(1600)
   );
-  const [lineToGraph, setLineToGraph] = useState<"infected" | "newInfections">(
-    "infected"
-  );
+  const [lineToGraph, setLineToGraph] = useState<
+    "infected" | "newInfections" | "dead" | "newDeaths"
+  >("infected");
   const [diseaseData, setDiseaseData] = useState<DataPoint[]>([]);
   const [autoMode, setAutoMode] = useState<boolean>(false);
   const [simulationParameters, setSimulationParameters] =
@@ -93,15 +95,19 @@ const App: FC = () => {
   useEffect(() => {
     // Each time the population changes, we add an item to our disease...
     let infectedCount = population.filter((p) => p.infected).length;
-    let oldInfectedCount =
-      diseaseData.length > 0 ? diseaseData[diseaseData.length - 1].infected : 0;
+    let newInfections = population.filter((p) => p.daysInfected == 1).length;
+    let deadCount = population.filter((p) => !p.alive).length;
+    let oldDeadCount =
+      diseaseData.length > 0 ? diseaseData[diseaseData.length - 1].dead : 0;
     setDiseaseData([
       ...diseaseData,
       {
         infected: infectedCount,
-        newInfections: infectedCount - oldInfectedCount,
+        newInfections: newInfections,
         total: population.length,
         round: diseaseData.length,
+        dead: deadCount,
+        newDeaths: deadCount - oldDeadCount,
       },
     ]);
   }, [population]);
@@ -167,6 +173,10 @@ const App: FC = () => {
           </button>
           <button onClick={() => setLineToGraph("newInfections")}>
             New Infections
+          </button>
+          <button onClick={() => setLineToGraph("dead")}>Total Deaths</button>
+          <button onClick={() => setLineToGraph("newDeaths")}>
+            New Deaths
           </button>
         </div>
         <div className="world">

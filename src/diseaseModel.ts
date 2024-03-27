@@ -40,14 +40,19 @@ const updatePatient = (
   // choose a partner
   if (patient.alive) {
     const partner = population[Math.floor(Math.random() * population.length)];
-    if (partner.infected && 100 * Math.random() < params.infectionChance) {
+    if (
+      partner.infected &&
+      100 * Math.random() < params.infectionChance &&
+      partner.alive &&
+      patient.immuneRemain == 0
+    ) {
       updatedPatient = { ...patient, infected: true };
     }
     if (patient.infected == true) {
       let newDays = patient.daysInfected + 1;
       let deathNum = Math.random() * 100;
       updatedPatient = { ...patient, daysInfected: newDays };
-      if (deathNum < params.deathChance && patient.daysInfected >= 4) {
+      if (deathNum < params.deathChance && patient.daysInfected == 6) {
         updatedPatient = { ...patient, alive: false };
       }
       if (patient.daysInfected == 7) {
@@ -55,12 +60,16 @@ const updatePatient = (
           ...patient,
           infected: false,
           daysInfected: 0,
-          immuneRemain: 5,
+          immuneRemain: 15,
         };
       }
     }
-    return updatedPatient;
+    if (patient.immuneRemain > 0) {
+      let newRemain = patient.immuneRemain - 1;
+      updatedPatient = { ...patient, immuneRemain: newRemain };
+    }
   }
+  return updatedPatient;
 };
 
 export const updatePopulation = (
